@@ -6,10 +6,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def respond_with(resource, *args)
-    Rails.logger.debug params.inspect
-    Rails.logger.debug resource
-    Rails.logger.debug sign_up_params.inspect
-    Rails.logger.debug resource.errors.full_messages.inspect
     if resource.persisted?
       render json: {
         status: { code: 200, message: "Signed up successfully", data: resource }
