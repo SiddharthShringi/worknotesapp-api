@@ -5,10 +5,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # Called on POST /users/sign_in
   def respond_with(resource, _opts = {})
-    render json: {
-      status: { code: 200, message: "Logged in successfully." },
-      data: resource
-    }, status: :ok
+    render json: { user: resource, message: "Signed In Successfully" }, status: :ok
   end
 
   # Called on DELETE /users/sign_out
@@ -17,12 +14,10 @@ class Users::SessionsController < Devise::SessionsController
     # current_user will be populated automatically.
     if current_user
       render json: {
-        status: 200,
         message: "Logged out successfully."
       }, status: :ok
     else
       render json: {
-        status: 401,
         message: "No active session found."
       }, status: :unauthorized
     end

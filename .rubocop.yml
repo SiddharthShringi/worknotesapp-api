@@ -1,3 +1,4 @@
+plugins: rubocop-rspec
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
@@ -6,3 +7,16 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+
+Style/StringLiterals:
+  Include:
+    - "spec/**/*"
+    - "app/**/*"
+    - "config/**/*"
+    - "lib/**/*"
+    - "db/seeds.rb"
+    - "Gemfile"
