@@ -20,3 +20,6 @@ Style/StringLiterals:
     - "lib/**/*"
     - "db/seeds.rb"
     - "Gemfile"
+
+RSpec/MultipleExpectations:
+  Max: 3
