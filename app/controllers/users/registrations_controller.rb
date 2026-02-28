@@ -6,11 +6,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def respond_with(resource, *args)
+    puts resource, "++++++++"
     if resource.persisted?
       render json: { user: resource, message: "Signed up Successfully" }, status: :created
     else
       render json: {
-        errors: resource.errors.full_messages,
+        errors: resource.errors.to_hash,
         message: "User could not be created!" }, status: :unprocessable_content
     end
   end
