@@ -1,6 +1,8 @@
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
 
+  skip_before_action :authenticate_user!
+
   private
 
   # Called on POST /users/sign_in
