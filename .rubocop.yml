@@ -22,4 +22,4 @@ Style/StringLiterals:
     - "Gemfile"
 
 RSpec/MultipleExpectations:
-  Max: 3
+  Max: 4

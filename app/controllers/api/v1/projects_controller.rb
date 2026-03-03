@@ -13,7 +13,7 @@ class Api::V1::ProjectsController < ApplicationController
     if @project.save
       render json: @project, status: :created
     else
-      render json: { errors: @project.errors.to_hash }, status: :unprocessable_entity
+      render json: { errors: @project.errors.to_hash }, status: :unprocessable_content
     end
   end
 
@@ -21,7 +21,7 @@ class Api::V1::ProjectsController < ApplicationController
     if @project.update(project_params)
       render json: @project, status: :ok
     else
-      render json: { errors: @project.errors.to_hash }, status: :unprocessable_entity
+      render json: { errors: @project.errors.to_hash }, status: :unprocessable_content
     end
   end
 
