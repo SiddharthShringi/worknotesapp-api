@@ -1,5 +1,6 @@
 class Project < ApplicationRecord
   belongs_to :user
+  has_many :work_sessions
 
   enum :color, {
     blue: "blue",
