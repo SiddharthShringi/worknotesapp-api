@@ -21,4 +21,6 @@ class Project < ApplicationRecord
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+
+  has_many :work_sessions
 end

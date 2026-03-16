@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_02_075725) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_12_162834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -47,5 +47,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_02_075725) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "work_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "project_id", null: false
+    t.string "intent", null: false
+    t.text "notes"
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_work_sessions_on_project_id"
+    t.index ["user_id", "started_at"], name: "index_work_sessions_on_user_id_and_started_at"
+    t.index ["user_id"], name: "index_one_active_session_per_user", unique: true, where: "(ended_at IS NULL)"
+    t.check_constraint "ended_at IS NULL OR ended_at >= started_at", name: "work_sessions_valid_time_range"
+  end
+
   add_foreign_key "projects", "users"
+  add_foreign_key "work_sessions", "projects"
+  add_foreign_key "work_sessions", "users"
 end
