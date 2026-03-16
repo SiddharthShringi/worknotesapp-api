@@ -64,4 +64,20 @@ RSpec.describe WorkSession, type: :model do
       expect(work_session.errors[:ended_at]).to include("must be after started_at")
     end
   end
+
+  describe "active session constraint" do
+    let(:user) { create(:user) }
+    let(:project) { create(:project, user: user) }
+
+    before do
+      create(:work_session, user: user, project: project, ended_at: nil)
+    end
+
+    it "is invalid when user already has an active session" do
+      work_session = build(:work_session, user: user, project: project, ended_at: nil)
+
+      expect(work_session).not_to be_valid
+      expect(work_session.errors[:base]).to include("You already have an active session")
+    end
+  end
 end

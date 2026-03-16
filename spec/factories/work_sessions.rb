@@ -10,7 +10,8 @@ FactoryBot.define do
     ended_at { nil }
 
     trait :completed do
-      ended_at { started_at + 1.hour }
+      started_at { 2.hours.ago }
+      ended_at { 1.hour.ago }
     end
   end
 end
