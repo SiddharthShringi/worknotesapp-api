@@ -26,7 +26,7 @@ class Api::V1::WorkSessionsController < ApplicationController
   end
 
   def update
-    if @work_session.update(update_params)
+    if @work_session.update(work_session_params)
       render json: @work_session, status: :ok
     else
       render json: { errors: @work_session.errors.to_hash }, status: :unprocessable_content
@@ -38,11 +38,17 @@ class Api::V1::WorkSessionsController < ApplicationController
       return render json: { error: "Session already ended" }, status: :unprocessable_content
     end
 
-    if @work_session.update(notes: stop_params[:notes], ended_at: Time.current)
+    if @work_session.update(ended_at: Time.current)
       render json: @work_session, status: :ok
     else
       render json: { errors: @work_session.errors.to_hash }, status: :unprocessable_content
     end
+  end
+
+  def active
+    active_work_session = current_user.work_sessions.find_by(ended_at: nil)
+
+    render json: active_work_session, status: :ok
   end
 
   def destroy
@@ -57,14 +63,6 @@ class Api::V1::WorkSessionsController < ApplicationController
   end
 
   def work_session_params
-    params.require(:work_session).permit(:project_id, :intent)
-  end
-
-  def update_params
-    params.require(:work_session).permit(:intent, :notes)
-  end
-
-  def stop_params
-    params.require(:work_session).permit(:notes)
+    params.require(:work_session).permit(:project_id, :intent, :notes)
   end
 end

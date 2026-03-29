@@ -14,6 +14,9 @@ Rails.application.routes.draw do
         member do
           patch :stop
         end
+        collection do
+          get :active
+        end
       end
     end
   end
