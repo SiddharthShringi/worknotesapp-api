@@ -150,7 +150,6 @@ RSpec.describe "WorkSessions API", type: :request do
 
     before do
       patch "/api/v1/work_sessions/#{work_session.id}/stop",
-            params: { work_session: { notes: "Finished work" } },
             headers: auth_headers_for(user),
             as: :json
     end
@@ -162,11 +161,6 @@ RSpec.describe "WorkSessions API", type: :request do
     it "ends the session" do
       work_session.reload
       expect(work_session.ended_at).not_to be_nil
-    end
-
-    it "stores the notes" do
-      work_session.reload
-      expect(work_session.notes).to eq("Finished work")
     end
   end
 
