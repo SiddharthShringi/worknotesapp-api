@@ -4,8 +4,11 @@ class Api::V1::ProjectsController < ApplicationController
   before_action :set_project, only: %i[update destroy]
 
   def index
-    @projects = current_user.projects.order(created_at: :desc)
-    render json: @projects, status: :ok
+  @projects = current_user.projects
+                          .filter_by(params)
+                          .order(created_at: :desc)
+
+  render json: @projects, status: :ok
   end
 
   def create
