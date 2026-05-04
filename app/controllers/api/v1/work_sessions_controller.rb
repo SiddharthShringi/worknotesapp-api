@@ -2,11 +2,9 @@ class Api::V1::WorkSessionsController < ApplicationController
   before_action :set_work_session, only: [ :update, :destroy, :stop ]
 
   def index
-    work_sessions = current_user.work_sessions
+    @work_sessions = current_user.work_sessions
                                 .includes(:project)
                                 .order(started_at: :desc)
-
-    render json: work_sessions, status: :ok
   end
 
   def create

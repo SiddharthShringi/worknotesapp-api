@@ -8,6 +8,12 @@ class WorkSession < ApplicationRecord
   validate :ended_after_started
   validate :only_one_active_session, on: :create
 
+  def duration
+    return nil unless ended_at.present?
+
+    ended_at - started_at
+  end
+
   private
 
   def ended_after_started
@@ -21,12 +27,6 @@ class WorkSession < ApplicationRecord
   def only_one_active_session
     return if ended_at.present?
 
-    if user.work_sessions.where(ended_at: nil).exists?
-      errors.add(:base, "You already have an active session")
-    end
-  end
-
-  def only_one_active_session
     if user.work_sessions.where(ended_at: nil).exists?
       errors.add(:base, "You already have an active session")
     end
