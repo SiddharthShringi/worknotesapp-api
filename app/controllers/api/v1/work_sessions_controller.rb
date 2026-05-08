@@ -5,7 +5,7 @@ class Api::V1::WorkSessionsController < ApplicationController
     @grouped_work_sessions = current_user.work_sessions
                                 .includes(:project)
                                 .order(started_at: :desc)
-                                .group_by { |session|   session.started_at.in_time_zone("Asia/Kolkata").to_date }
+                                .group_by { |session|   session.started_at.in_time_zone(current_user.timezone).to_date }
   end
 
   def create
