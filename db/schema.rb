@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_12_162834) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_07_080912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -56,7 +56,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_12_162834) do
     t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "duration", default: 0, null: false
     t.index ["project_id"], name: "index_work_sessions_on_project_id"
+    t.index ["started_at"], name: "index_work_sessions_on_started_at"
     t.index ["user_id", "started_at"], name: "index_work_sessions_on_user_id_and_started_at"
     t.index ["user_id"], name: "index_one_active_session_per_user", unique: true, where: "(ended_at IS NULL)"
     t.check_constraint "ended_at IS NULL OR ended_at >= started_at", name: "work_sessions_valid_time_range"

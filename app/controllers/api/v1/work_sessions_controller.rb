@@ -2,9 +2,10 @@ class Api::V1::WorkSessionsController < ApplicationController
   before_action :set_work_session, only: [ :update, :destroy, :stop ]
 
   def index
-    @work_sessions = current_user.work_sessions
+    @grouped_work_sessions = current_user.work_sessions
                                 .includes(:project)
                                 .order(started_at: :desc)
+                                .group_by { |session|   session.started_at.in_time_zone("Asia/Kolkata").to_date }
   end
 
   def create
