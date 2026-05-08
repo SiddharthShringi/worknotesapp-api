@@ -7,7 +7,13 @@ class Users::SessionsController < Devise::SessionsController
 
   # Called on POST /users/sign_in
   def respond_with(resource, _opts = {})
-    render json: { user: resource, message: "Signed In Successfully" }, status: :ok
+    render json: { user: {
+        id: resource.id,
+        email: resource.email,
+        first_name: resource.first_name,
+        last_name: resource.last_name,
+        timezone: resource.timezone
+    }, message: "Signed In Successfully" }, status: :ok
   end
 
   # Called on DELETE /users/sign_out
