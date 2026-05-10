@@ -63,4 +63,48 @@ RSpec.describe Project, type: :model do
       expect { project.color = "black" }.to raise_error(ArgumentError)
     end
   end
+
+  describe ".filter_by" do
+    let!(:active_project) do
+      create(:project, archived: false)
+    end
+
+    let!(:archived_project) do
+      create(:project, archived: true)
+    end
+
+    context "when status is active" do
+      it "returns active projects" do
+        result = described_class.filter_by(status: "active")
+
+        expect(result).to contain_exactly(active_project)
+      end
+    end
+
+    context "when status is archived" do
+      it "returns archived projects" do
+        result = described_class.filter_by(status: "archived")
+
+        expect(result).to contain_exactly(archived_project)
+      end
+    end
+
+    context "when status is unknown" do
+      it "returns all projects" do
+        result = described_class.filter_by(status: "unknown")
+
+        expect(result)
+          .to contain_exactly(active_project, archived_project)
+      end
+    end
+
+    context "when status is missing" do
+      it "returns all projects" do
+        result = described_class.filter_by({})
+
+        expect(result)
+          .to contain_exactly(active_project, archived_project)
+      end
+    end
+  end
 end
