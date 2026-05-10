@@ -24,16 +24,13 @@ class Project < ApplicationRecord
   scope :archived, -> { where(archived: true) }
 
   def self.filter_by(params)
-    puts "Filtering projects with params: #{params.inspect}"
-    projects = all
-
     case params[:status]
     when "active"
-      projects = projects.active
+      active
     when "archived"
-      projects = projects.archived
+      archived
+    else
+      all
     end
-
-    projects
   end
 end

@@ -43,6 +43,75 @@ RSpec.describe "Projects API", type: :request do
         expect(json_response).to be_empty
       end
     end
+
+    context "when filtering active projects" do
+      let(:user) { create(:user) }
+
+      let!(:active_project) do
+        create(:project, user: user, archived: false)
+      end
+
+      before do
+        get "/api/v1/projects",
+            params: { status: "active" },
+            headers: auth_headers_for(user)
+      end
+
+      it "returns only active projects" do
+        json = JSON.parse(response.body)
+
+        returned_ids = json.map { |project| project["id"] }
+
+        expect(returned_ids).to contain_exactly(active_project.id)
+      end
+    end
+
+    context "when filtering archived projects" do
+      let(:user) { create(:user) }
+      let!(:archived_project) do
+        create(:project, user: user, archived: true)
+      end
+
+      before do
+        get "/api/v1/projects",
+            params: { status: "archived" },
+            headers: auth_headers_for(user)
+      end
+
+      it "returns only archived projects" do
+        json = JSON.parse(response.body)
+
+        returned_ids = json.map { |project| project["id"] }
+
+        expect(returned_ids).to contain_exactly(archived_project.id)
+      end
+    end
+
+    context "when no status filter is provided" do
+      let(:user) { create(:user) }
+      let!(:active_project) do
+        create(:project, user: user, archived: false)
+      end
+
+      let!(:archived_project) do
+        create(:project, user: user, archived: true)
+      end
+
+      before do
+        get "/api/v1/projects",
+            headers: auth_headers_for(user)
+      end
+
+      it "returns all projects" do
+        json = JSON.parse(response.body)
+        returned_ids = json.map { |project| project["id"] }
+        expect(returned_ids)
+          .to contain_exactly(
+            active_project.id,
+            archived_project.id
+          )
+      end
+    end
   end
 
   describe "POST /api/v1/projects for authenticated user" do

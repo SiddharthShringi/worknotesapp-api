@@ -2,25 +2,22 @@ require "rails_helper"
 
 RSpec.describe "WorkSessions API", type: :request do
   describe "GET /api/v1/work_sessions" do
-    context "when the user is not authenticated" do
-      it "returns unauthorized" do
-        get "/api/v1/work_sessions"
+    let(:json) { JSON.parse(response.body) }
 
+    context "when the user is not authenticated" do
+      before do
+        get "/api/v1/work_sessions"
+      end
+
+      it "returns unauthorized" do
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
     context "when the user is authenticated" do
-      let(:user) { create(:user) }
-      let(:other_user) { create(:user) }
-      let(:project) { create(:project, user: user) }
+      let(:user) { create(:user, timezone: "Asia/Kolkata") }
 
       before do
-        create_list(:work_session, 2, :completed, user: user, project: project)
-
-        other_project = create(:project, user: other_user)
-        create_list(:work_session, 3, :completed, user: other_user, project: other_project)
-
         get "/api/v1/work_sessions",
             headers: auth_headers_for(user)
       end
@@ -28,14 +25,109 @@ RSpec.describe "WorkSessions API", type: :request do
       it "returns successful response" do
         expect(response).to have_http_status(:ok)
       end
+    end
 
-      it "returns only sessions belonging to the authenticated user" do
-        json = JSON.parse(response.body)
+    context "when authenticated with existing sessions" do
+      let(:user) { create(:user, timezone: "Asia/Kolkata") }
+      let(:project) { create(:project, user: user) }
+
+      let!(:user_sessions) do
+        create_list(
+          :work_session,
+          2,
+          :completed,
+          user: user,
+          project: project
+        )
+      end
+
+      before do
+        other_user = create(:user)
+        other_project = create(:project, user: other_user)
+
+        create_list(
+          :work_session,
+          3,
+          :completed,
+          user: other_user,
+          project: other_project
+        )
+
+        get "/api/v1/work_sessions",
+            headers: auth_headers_for(user)
+      end
+
+      it "returns only authenticated user's sessions" do
+        sessions = json.flat_map { |group| group["sessions"] }
+
+        returned_ids = sessions.map { |session| session["id"] }
+
+        expect(returned_ids).to match_array(user_sessions.map(&:id))
+      end
+    end
+
+    context "when authenticated with sessions on same local date" do
+      let(:user) { create(:user, timezone: "Asia/Kolkata") }
+      let(:project) { create(:project, user: user) }
+
+      before do
+        create(
+          :work_session,
+          :completed,
+          user: user,
+          project: project,
+          started_at: Time.utc(2026, 5, 8, 20, 0)
+        )
+
+        create(
+          :work_session,
+          :completed,
+          user: user,
+          project: project,
+          started_at: Time.utc(2026, 5, 8, 22, 0)
+        )
+
+        get "/api/v1/work_sessions",
+            headers: auth_headers_for(user)
+      end
+
+      it "groups sessions together" do
+        expect(json.size).to eq(1)
+        expect(json.first["sessions"].size).to eq(2)
+      end
+    end
+
+    context "when authenticated with sessions on different local dates" do
+      let(:user) { create(:user, timezone: "Asia/Kolkata") }
+      let(:project) { create(:project, user: user) }
+
+      before do
+        create(
+          :work_session,
+          :completed,
+          user: user,
+          project: project,
+          started_at: Time.utc(2026, 5, 8, 10, 0)
+        )
+
+        create(
+          :work_session,
+          :completed,
+          user: user,
+          project: project,
+          started_at: Time.utc(2026, 5, 8, 23, 30)
+        )
+
+        get "/api/v1/work_sessions",
+            headers: auth_headers_for(user)
+      end
+
+      it "groups sessions separately by timezone-adjusted date" do
         expect(json.size).to eq(2)
       end
     end
 
-    context "when the user has no sessions" do
+    context "when authenticated with no sessions" do
       let(:user) { create(:user) }
 
       before do
@@ -43,9 +135,8 @@ RSpec.describe "WorkSessions API", type: :request do
             headers: auth_headers_for(user)
       end
 
-      it "returns an empty array" do
-        json = JSON.parse(response.body)
-        expect(json).to be_empty
+      it "returns empty array" do
+        expect(json).to eq([])
       end
     end
   end
