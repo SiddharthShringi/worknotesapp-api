@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.3"
+gem "rails", "~> 8.1.0"
 # Use postgres as the database for Active Record
 gem "pg", "~> 1.5"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -44,7 +44,7 @@ group :development, :test do
   gem "rspec-rails"
 
  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
- gem "brakeman", "~> 8.0.4", require: false
+ gem "brakeman", "~> 8.1", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
