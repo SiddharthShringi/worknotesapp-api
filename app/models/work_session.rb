@@ -8,10 +8,12 @@ class WorkSession < ApplicationRecord
   validate :ended_after_started
   validate :only_one_active_session, on: :create
 
-  def duration
+  before_validation :calculate_duration, if: :ended_at?
+
+  def calculate_duration
     return nil unless ended_at.present?
 
-    ended_at - started_at
+    self.duration = ended_at - started_at
   end
 
   private
