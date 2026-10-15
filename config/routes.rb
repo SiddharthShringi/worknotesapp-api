@@ -19,6 +19,8 @@ Rails.application.routes.draw do
           get :active
         end
       end
+
+      resources :reports, only: [ :index ]
     end
   end
 end
