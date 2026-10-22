@@ -38,10 +38,12 @@ RSpec.describe "GET /api/v1/reports", type: :request do
     end
 
     it "hands the service the current user and a parsed Date" do
-      expect(DailyReportSummaryService)
-        .to receive(:new).with(user, Date.new(2026, 10, 21)).and_call_original
+      allow(DailyReportSummaryService).to receive(:new).and_call_original
 
       get_report("2026-10-21")
+
+      expect(DailyReportSummaryService)
+        .to have_received(:new).with(user, Date.new(2026, 10, 21))
     end
   end
 
