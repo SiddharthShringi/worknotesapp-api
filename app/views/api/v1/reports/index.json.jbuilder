@@ -1,5 +1,3 @@
-puts @report, "++++++++++++"
-
 json.extract! @report, :date, :total_duration, :total_sessions, :first_session_start, :last_session_end
 json.projects @report[:projects] do |project|
   json.extract! project, :id, :color, :name, :duration
