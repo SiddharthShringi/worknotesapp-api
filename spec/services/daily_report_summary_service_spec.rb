@@ -70,7 +70,7 @@ RSpec.describe DailyReportSummaryService do
     end
   end
 
-  context "timezone edges" do
+  context "when sessions sit at the edges of the user's day" do
     it "includes 23:59 and 00:00 in the user's day, not UTC's day" do
       session_at("2026-10-21 00:00", "2026-10-21 00:30", project: project_a)
       session_at("2026-10-21 23:30", "2026-10-21 23:59", project: project_a)
