@@ -11,4 +11,5 @@ class User < ApplicationRecord
 
   has_many :projects, dependent: :destroy
   has_many :work_sessions, dependent: :destroy
+  has_many :exports, dependent: :destroy
 end
