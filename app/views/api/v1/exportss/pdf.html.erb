@@ -1,0 +1,30 @@
+<%# app/views/exports/pdf.html.erb %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body { font-family: "Helvetica Neue", Arial, sans-serif; color: #1f2937; font-size: 12px; line-height: 1.6; }
+            header { border-bottom: 2px solid #4f46e5; padding-bottom: 12px; margin-bottom: 24px; }
+            h1 { margin: 0; font-size: 24px; color: #4f46e5; }
+            .meta { color: #6b7280; font-size: 11px; margin-top: 4px; }
+            .note { border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; page-break-inside: avoid; }
+            .note h2 { margin: 0 0 4px; font-size: 15px; }
+            .note .date { color: #9ca3af; font-size: 10px; margin-bottom: 8px; }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>My Work Notes</h1>
+            <div class="meta">Generated on <%= generated_at.strftime("%d %b %Y, %H:%M") %> · <%= notes.size %> notes</div>
+        </header>
+
+        <% notes.each do |note| %>
+            <section class="note">
+            <h2><%= note.title %></h2>
+            <div class="date"><%= note.created_at.strftime("%d %b %Y") %></div>
+            <%= simple_format(note.body) %>
+            </section>
+        <% end %>
+    </body>
+</html>

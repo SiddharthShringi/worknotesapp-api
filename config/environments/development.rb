@@ -3,6 +3,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  Rails.application.routes.default_url_options = { host: "localhost", port: 3001 }
+
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
@@ -28,8 +30,6 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
-
-  config.routes.default_url_options = { host: "localhost", port: 3001 }
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

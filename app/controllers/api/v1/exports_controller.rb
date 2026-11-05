@@ -5,7 +5,7 @@ class Api::V1::ExportsController < ApplicationController
     if @export.present?
       render :show, status: :ok
     else
-      @export = current_user.exports.create!
+      @export = current_user.exports.create!(filters: export_filters)
       # ExportPdfJob.perform_later(@export.id)
       render :show, status: :accepted
     end
@@ -13,5 +13,11 @@ class Api::V1::ExportsController < ApplicationController
 
   def show
     @export = current_user.exports.find(params[:id])
+  end
+
+  private
+
+  def export_filters
+    params.fetch(:export, {}).permit(:date).to_h
   end
 end
