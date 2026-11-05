@@ -36,7 +36,9 @@ gem "thruster", require: false
 gem "rack-cors"
 gem "devise"
 gem "devise-jwt"
-gem "jbuilder"
+
+gem "grover"    # HTML to PDF
+gem "sidekiq"   # background jobs
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

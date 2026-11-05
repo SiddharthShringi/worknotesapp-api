@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       end
 
       resources :reports, only: [ :index ]
+      resources :exports, only: [ :create, :show ]
     end
   end
 end
