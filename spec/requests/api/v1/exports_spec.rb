@@ -23,7 +23,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(user.exports, :count).by(1)
 
         expect(response).to have_http_status(:accepted)
@@ -41,7 +42,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(ExportPdfJob.jobs, :size).by(1)
 
         export = user.exports.last
@@ -52,7 +54,9 @@ RSpec.describe "Api::V1::Exports", type: :request do
       it "returns the created export in the response" do
         post api_v1_exports_path,
           params: valid_params,
-          headers: auth_headers
+          headers: auth_headers,
+          as: :json
+
 
         export = user.exports.last
 
@@ -81,7 +85,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(user.exports, :count)
 
         expect(response).to have_http_status(:ok)
@@ -94,7 +99,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(ExportPdfJob.jobs, :size)
       end
     end
@@ -113,7 +119,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(user.exports, :count)
 
         expect(response).to have_http_status(:ok)
@@ -126,7 +133,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(ExportPdfJob.jobs, :size)
       end
     end
@@ -145,7 +153,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(user.exports, :count).by(1)
 
         expect(response).to have_http_status(:accepted)
@@ -156,7 +165,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(ExportPdfJob.jobs, :size).by(1)
       end
     end
@@ -175,7 +185,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(user.exports, :count).by(1)
 
         expect(response).to have_http_status(:accepted)
@@ -198,7 +209,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: valid_params,
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.to change(user.exports, :count).by(1)
 
         expect(response).to have_http_status(:accepted)
@@ -210,7 +222,9 @@ RSpec.describe "Api::V1::Exports", type: :request do
       it "returns unprocessable entity" do
         post api_v1_exports_path,
           params: { export: { date: "16-11-2026" } },
-          headers: auth_headers
+          headers: auth_headers,
+          as: :json
+
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -219,7 +233,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: { export: { date: "2026-02-30" } },
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(user.exports, :count)
       end
 
@@ -227,7 +242,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
         expect {
           post api_v1_exports_path,
             params: { export: { date: "invalid-date" } },
-            headers: auth_headers
+            headers: auth_headers,
+            as: :json
         }.not_to change(ExportPdfJob.jobs, :size)
       end
     end
@@ -236,7 +252,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
       it "returns unprocessable entity" do
         post api_v1_exports_path,
           params: { export: {} },
-          headers: auth_headers
+          headers: auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -245,7 +262,8 @@ RSpec.describe "Api::V1::Exports", type: :request do
     context "when export parameters are missing" do
       it "returns unprocessable entity" do
         post api_v1_exports_path,
-          headers: auth_headers
+          headers: auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
