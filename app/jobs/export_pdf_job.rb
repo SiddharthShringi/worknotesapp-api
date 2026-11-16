@@ -9,12 +9,7 @@ class ExportPdfJob
       "ExportPdfJob failed: #{error.class} - #{error.message}"
     )
 
-    export = Export.find_by(id: msg["args"].first)
-
-    export&.update!(
-      status: :failed,
-      error_message: "We couldn't generate your PDF. Please try again."
-    )
+    mark_as_failed(msg["args"].first)
   end
 
   def perform(export_id)
@@ -46,6 +41,16 @@ class ExportPdfJob
       status: :completed,
       completed_at: Time.current,
       error_message: nil
+    )
+  end
+
+  def self.mark_as_failed(export_id)
+    export = Export.find_by(id: export_id)
+    return unless export
+
+    export.update!(
+      status: :failed,
+      error_message: "We couldn't generate your PDF. Please try again."
     )
   end
 
