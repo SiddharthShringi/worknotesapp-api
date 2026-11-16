@@ -1,5 +1,5 @@
 
-class ExportsController < ApplicationController
+class Api::V1::ExportsController < ApplicationController
   before_action :authenticate_user!
 
   # POST /exports
